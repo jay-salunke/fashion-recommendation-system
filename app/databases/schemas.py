@@ -2,8 +2,23 @@ from pydantic import BaseModel
 
 
 class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
+    # get items from models.py along with data type
+    item_id: int
+    product_name: str
+    product_type_no: int
+    product_group_name: str
+    graphical_appearance_no: int
+    colour_group_code: int
+    department_no: int
+    index_code: str
+    index_group_no: int
+    section_no: int
+    garment_group_no: int
+    description: str
+    price: str
+
+    class Config:
+        orm_mode = True
 
 
 class ItemCreate(ItemBase):
@@ -43,4 +58,19 @@ class User(UserBase):
 
 class UserFinal(User):
     user_id: str
+
+
+class Transactions(BaseModel):
+    # get transactions from models.py along with data type
+    user_id: str
+    item_id: int
+    sales_channel_id: int
+    timestamp: int
+    event_type: str
+    event_typ: str
+
+    class Config:
+        orm_mode = True
+
+
 

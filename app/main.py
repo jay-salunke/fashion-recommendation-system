@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
-from app.routers import auth, users
+from app.routers import auth, users, items
 from app.databases.database import engine
 from app.databases import models
 
@@ -14,6 +14,8 @@ app = FastAPI()
 app.include_router(auth.router)
 # Include Users Information Router
 app.include_router(users.router)
+# Include Items Information Router
+app.include_router(items.router)
 # Serving the Static Files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
