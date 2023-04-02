@@ -1,4 +1,4 @@
-from sqlalchemy import  Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.mysql import BIGINT
 from app.databases.database import Base
 

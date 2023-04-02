@@ -7,7 +7,7 @@ router = APIRouter(prefix="/items")
 
 
 @router.post("/insert")
-def insert_items(items: schemas.ItemBase,db: Session = Depends(get_db)):
+def insert_items(items: schemas.ItemBase, db: Session = Depends(get_db)):
     items = crud.creat_item(db=db, item=items)
     if items:
         return {

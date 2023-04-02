@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from app.databases.getdb import get_db
 from app.databases import schemas
 from app.databases import crud
-
+from app.routers.auth import get_current_user
 router = APIRouter(prefix="/users")
 
 
 @router.post('/info')
-def get_info(user: schemas.User, db: Session = Depends(get_db)):
+def get_info(current, db: Session = Depends(get_db)):
     check = crud.get_user_by_email(db=db, email=user.email)
     if not check:
         return {
@@ -21,7 +21,7 @@ def get_info(user: schemas.User, db: Session = Depends(get_db)):
         return {
             "api": "v1",
             "status": "failed",
-            "description": "User Information Is alredy There"
+            "description": "User Information Is Already There"
         }
     else:
         return {
@@ -32,8 +32,9 @@ def get_info(user: schemas.User, db: Session = Depends(get_db)):
 
 
 @router.post('/transactions')
-def get_transactions(user: schemas.UserBase, db: Session = Depends(get_db)):
-    result = crud.get_user_by_email(db, user.email)
+def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_current_user)):
+    print("In transactions")
+    result = crud.get_user_by_email(db,current_user.email)
     if result:
         # get all transactions for a user and return it in json format
         transactions = crud.get_transactions_by_id(db=db, id=result.user_id)
@@ -44,6 +45,7 @@ def get_transactions(user: schemas.UserBase, db: Session = Depends(get_db)):
                 'transaction_id': transaction.id,
                 'transaction_date': str(transaction.timestamp),
                 'item_name': item.product_name,
+                'item_id': item.item_id,
                 'item_price': item.price,
             }
             transaction_list.append(transaction_data)
@@ -57,7 +59,7 @@ def get_transactions(user: schemas.UserBase, db: Session = Depends(get_db)):
 
 
 @router.post('/transactions/create')
-def create_transactions(transactions: schemas.Transactions, db: Session = Depends(get_db)):
+def create_transactions(transactions: schemas.Transactions, db: Session = Depends(get_db),current = Depends(get_current_user)):
     transactions = crud.create_transactions(db=db, transaction=transactions)
     if transactions:
         return {
