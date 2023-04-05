@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from app.databases import models, schemas
-
 import time
 
 
@@ -20,6 +19,7 @@ def generate_user_id():
 def create_user(db: Session, user: schemas.UserCreate):
     # check user already exists otherwise create user
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    print(db_user)
     if db_user:
         return False
     db_user = models.User(email=user.email, hashed_password=user.password)
@@ -39,7 +39,7 @@ def create_user_info(db: Session, user: schemas.User):
         return False
     db_user = models.User(user_id=generate_user_id(), club_member_status=user.club_member_status,
                           fashion_news_frequency=user.fashion_news_frequency, age=user.age,
-                          postal_code=user.postal_code)
+                          postal_code=user.postal_code,name=user.name)
     hello = db_user.__dict__.copy()
     hello.pop('_sa_instance_state')
     db.query(models.User).filter(models.User.email == user.email).update(hello)
@@ -76,9 +76,11 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
     # create transaction
     db_transaction = models.Transactions(user_id=transaction.user_id, item_id=transaction.item_id,
                                          sales_channel_id=transaction.sales_channel_id, timestamp=get_current_time(),
-                                         event_type=transaction.event_type, event_typ=transaction.event_typ)
+                                         event_type=transaction.event_type)
 
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
     return True
+
+

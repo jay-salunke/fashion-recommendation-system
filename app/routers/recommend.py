@@ -9,7 +9,7 @@ router = APIRouter(prefix="/recommend")
 
 personalizeRt = boto3.client('personalize-runtime')
 
-
+#lL3ZtFGCLXV81efEsxax
 @router.post("/foryou")
 def recommended_for_you(user: schemas.UserBase, db: Session = Depends(get_db)):
     result = crud.get_user_by_email(db, user.email)

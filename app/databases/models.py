@@ -5,8 +5,8 @@ from app.databases.database import Base
 
 class User(Base):
     __tablename__ = "users"
-
     user_id = Column(String(100), index=True)
+    name = Column(String(100))
     email = Column(String(50), unique=True, primary_key=True, index=True)
     hashed_password = Column(String(40))
     club_member_status = Column(String(40))
@@ -41,4 +41,3 @@ class Transactions(Base):
     sales_channel_id = Column(BIGINT)
     timestamp = Column(BIGINT)
     event_type = Column(String(20))
-    event_typ = Column(String(20))

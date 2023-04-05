@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from starlette.responses import Response
+from  starlette.responses import JSONResponse
 from typing import Optional
 import base64
 from passlib.context import CryptContext
@@ -17,9 +18,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2
 from fastapi.security.base import SecurityBase
 from fastapi.security.utils import get_authorization_scheme_param
-from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from fastapi.openapi.utils import get_openapi
 
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, Response, JSONResponse
@@ -38,6 +37,7 @@ router = APIRouter(prefix="/auth")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 
 
 
@@ -128,7 +128,7 @@ def authenticate_user(email: str, password: str, db: Session):
         return False
     if user.hashed_password != password:
         return False
-    return user
+    return user,user.age
 
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
@@ -171,7 +171,7 @@ async def homepage():
 
 @app.post("/token", response_model=Token)
 async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(email=form_data.username, password=form_data.password, db=db)
+    user,age = authenticate_user(email=form_data.username, password=form_data.password, db=db)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -188,19 +188,15 @@ async def route_logout_and_remove_cookie():
     return response
 
 
-@router.get('/login')
+@router.post('/login')
 async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
     if not auth:
-        print("not auth")
-        response = Response(headers={"WWW-Authenticate": "Basic"}, status_code=401)
-        return response
+        return JSONResponse({'status': 'failed'})
     try:
-        print("hello")
         decoded = base64.b64decode(auth).decode("ascii")
-        print(decoded)
         username, _, password = decoded.partition(":")
-        user = authenticate_user(email=username, password=password, db=db)
-        print(user)
+        user,age = authenticate_user(email=username, password=password, db=db)
+
         if not user:
             raise HTTPException(status_code=400, detail="Incorrect email or password")
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -209,22 +205,23 @@ async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depen
         )
 
         token = jsonable_encoder(access_token)
-        response = Response()
+        redirect = "False"
+        print(age)
+        if age is None:
+            redirect = "True"
+        response = JSONResponse({'status': "success",'redirect': redirect},headers={'token':"{token}"}) 
         response.set_cookie(
-            "Authorization",
+            key= "Authorization",
             value=f"Bearer {token}",
             domain="myproject.local",
-            httponly=True,
+            httponly=False,
             max_age=1800,
             expires=1800,
         )
-        print("hello")
-        return response
+        return  response   
 
     except Exception as e:
-        print(e)
-        response = Response(headers={"WWW-Authenticate": "Basic"}, status_code=401)
-        return response
+        return JSONResponse({'status': 'failed'})
 
 
 @router.post('/register')

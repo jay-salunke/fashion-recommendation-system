@@ -8,7 +8,8 @@ router = APIRouter(prefix="/users")
 
 
 @router.post('/info')
-def get_info(current, db: Session = Depends(get_db)):
+def get_info(userinfo: schemas.User,user = Depends(get_current_user), db: Session = Depends(get_db)):
+    userinfo.email = user.email
     check = crud.get_user_by_email(db=db, email=user.email)
     if not check:
         return {
@@ -16,7 +17,7 @@ def get_info(current, db: Session = Depends(get_db)):
             "status": "failed",
             "description": "User Not Found"
         }
-    result = crud.create_user_info(db=db, user=user)
+    result = crud.create_user_info(db=db, user=userinfo)
     if not result:
         return {
             "api": "v1",
@@ -35,6 +36,8 @@ def get_info(current, db: Session = Depends(get_db)):
 def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_current_user)):
     print("In transactions")
     result = crud.get_user_by_email(db,current_user.email)
+
+    print(result.user_id)
     if result:
         # get all transactions for a user and return it in json format
         transactions = crud.get_transactions_by_id(db=db, id=result.user_id)
@@ -47,6 +50,7 @@ def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_cu
                 'item_name': item.product_name,
                 'item_id': item.item_id,
                 'item_price': item.price,
+                'item_description':item.description
             }
             transaction_list.append(transaction_data)
         return transaction_list
@@ -60,6 +64,8 @@ def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_cu
 
 @router.post('/transactions/create')
 def create_transactions(transactions: schemas.Transactions, db: Session = Depends(get_db),current = Depends(get_current_user)):
+    user = crud.get_user_by_email(db=db, email=current.email)
+    transactions.user_id = user.user_id
     transactions = crud.create_transactions(db=db, transaction=transactions)
     if transactions:
         return {
