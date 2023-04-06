@@ -7,24 +7,18 @@ from typing import Optional
 import base64
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-
 import jwt
 from jwt import PyJWTError
-
 from pydantic import BaseModel
-
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2
 from fastapi.security.base import SecurityBase
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, Response, JSONResponse
 from starlette.requests import Request
-
-
 from databases import schemas
 from databases import crud
 from databases.getdb import get_db
@@ -189,7 +183,7 @@ async def route_logout_and_remove_cookie():
 
 
 @router.post('/login')
-async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
+async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
     if not auth:
         return JSONResponse({'status': 'failed'})
     try:
@@ -209,7 +203,7 @@ async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depen
         print(age)
         if age is None:
             redirect = "True"
-        response = JSONResponse({'status': "success",'redirect': redirect},headers={'token':"{token}"}) 
+        response = JSONResponse({'status': "success",'redirect': redirect,'token':token},headers={'token':"{token}"}) 
         response.set_cookie(
             key= "Authorization",
             value=f"Bearer {token}",
@@ -225,7 +219,7 @@ async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depen
 
 
 @router.post('/register')
-def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def register(user: schemas.UserCreate, db: Session = Depends(get_db), key = Depends(get_current_user)):
     result = crud.create_user(db=db, user=user)
     if result:
         return {

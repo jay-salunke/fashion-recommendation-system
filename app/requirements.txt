@@ -3,3 +3,4 @@ uvicorn
 passlib
 pymysql
 sqlalchemy
+python-multipart
