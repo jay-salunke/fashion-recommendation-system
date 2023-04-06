@@ -4,7 +4,7 @@ from typing import Optional
 import uvicorn
 from pydantic import BaseModel
 
-from app.databases.database import Base
+from databases.database import Base
 
 
 class ItemBase(BaseModel):

@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from starlette.staticfiles import StaticFiles
-from app.routers import auth, users, items
-from app.databases.database import engine
-from app.databases import models, crud
+from routers import auth, users, items
+from databases.database import engine
+from databases import models, crud
 from fastapi.middleware.cors import CORSMiddleware
 models.Base.metadata.create_all(bind=engine)
 

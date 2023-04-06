@@ -25,9 +25,9 @@ from starlette.responses import RedirectResponse, Response, JSONResponse
 from starlette.requests import Request
 
 
-from app.databases import schemas
-from app.databases import crud
-from app.databases.getdb import get_db
+from databases import schemas
+from databases import crud
+from databases.getdb import get_db
 
 
 router = APIRouter(prefix="/auth")
@@ -164,12 +164,12 @@ async def get_current_active_user(current_user = Depends(get_current_user)):
     return current_user
 
 
-@app.get("/")
+@router.get("/")
 async def homepage():
     return "Welcome to the security test!"
 
 
-@app.post("/token", response_model=Token)
+@router.post("/token", response_model=Token)
 async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user,age = authenticate_user(email=form_data.username, password=form_data.password, db=db)
     if not user:

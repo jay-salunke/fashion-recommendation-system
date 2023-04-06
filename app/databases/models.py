@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.mysql import BIGINT
-from app.databases.database import Base
+from databases.database import Base
 
 
 class User(Base):

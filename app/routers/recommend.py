@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.databases import schemas, crud
+from databases import schemas, crud
 import boto3
 
-from app.databases.getdb import get_db
+from databases.getdb import get_db
 
 router = APIRouter(prefix="/recommend")
 
