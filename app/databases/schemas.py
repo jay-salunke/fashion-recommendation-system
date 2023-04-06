@@ -41,6 +41,8 @@ class Item(ItemBase):
 
 class UserBase(BaseModel):
     email: str
+    class Config:
+        orm_mode: True
 
 
 class UserCreate(UserBase):

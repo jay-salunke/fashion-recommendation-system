@@ -137,6 +137,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    
     credentials_exception = HTTPException(
         status_code=HTTP_403_FORBIDDEN, detail="Could not validate credentials"
     )
@@ -184,6 +185,7 @@ async def route_logout_and_remove_cookie():
 
 @router.post('/login')
 async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
+    print(auth)
     if not auth:
         return JSONResponse({'status': 'failed'})
     try:

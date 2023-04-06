@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+import email
+from typing import Annotated, Optional
+from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
 from databases.getdb import get_db
 from databases import schemas
@@ -8,9 +10,9 @@ router = APIRouter(prefix="/users")
 
 
 @router.post('/info')
-def get_info(userinfo: schemas.User,user = Depends(get_current_user), db: Session = Depends(get_db)):
-    userinfo.email = user.email
-    check = crud.get_user_by_email(db=db, email=user.email)
+def get_info(userinfo: schemas.User,email: Annotated[str, Body()], db: Session = Depends(get_db)):
+    userinfo.email = email
+    check = crud.get_user_by_email(db=db, email=email)
     if not check:
         return {
             "api": "v1",
@@ -33,9 +35,11 @@ def get_info(userinfo: schemas.User,user = Depends(get_current_user), db: Sessio
 
 
 @router.post('/transactions')
-def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_current_user)):
+def get_transactions(email: Annotated[str, Body(embed=True)],db: Session = Depends(get_db)):
+    print("hello")
+    print(email)
     print("In transactions")
-    result = crud.get_user_by_email(db,current_user.email)
+    result = crud.get_user_by_email(db,email)
 
     print(result.user_id)
     if result:
@@ -63,8 +67,9 @@ def get_transactions(db: Session = Depends(get_db),current_user = Depends(get_cu
 
 
 @router.post('/transactions/create')
-def create_transactions(transactions: schemas.Transactions, db: Session = Depends(get_db),current = Depends(get_current_user)):
-    user = crud.get_user_by_email(db=db, email=current.email)
+def create_transactions( transactions: schemas.Transactions,email: Annotated[str, Body()], db: Session = Depends(get_db)):
+
+    user = crud.get_user_by_email(db=db, email=email)
     transactions.user_id = user.user_id
     transactions = crud.create_transactions(db=db, transaction=transactions)
     if transactions:
