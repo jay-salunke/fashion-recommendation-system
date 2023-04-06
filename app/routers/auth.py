@@ -178,7 +178,7 @@ async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depend
 @router.get("/logout")
 async def route_logout_and_remove_cookie():
     response = RedirectResponse(url="/auth/login")
-    response.delete_cookie("Authorization", domain="myproject.local")
+    response.delete_cookie("Authorization", domain="ec2-43-204-23-33.ap-south-1.compute.amazonaws.com")
     return response
 
 
@@ -207,7 +207,7 @@ async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depe
         response.set_cookie(
             key= "Authorization",
             value=f"Bearer {token}",
-            domain="myproject.local",
+            domain="ec2-43-204-23-33.ap-south-1.compute.amazonaws.com",
             httponly=False,
             max_age=1800,
             expires=1800,
