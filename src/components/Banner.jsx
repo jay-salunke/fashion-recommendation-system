@@ -1,7 +1,7 @@
 import React from "react";
-import Banner1 from "./../images/Banner1.jpg";
-import Banner2 from "./../images/Banner2.jpg";
-import Banner3 from "./../images/Banner3.jpg";
+import Banner1 from "./../assets/Banner1.jpg";
+import Banner2 from "./../assets/Banner2.jpg";
+import Banner3 from "./../assets/Banner3.jpg";
 
 function Banner() {
   return (
