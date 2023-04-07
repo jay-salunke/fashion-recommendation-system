@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 // import React, { useState} from "react";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
-import shop from "./shopping.svg";
+// import shop from "./shopping.svg";
 
 function Register() {
   const [info, setInfo] = useState({
@@ -32,7 +32,7 @@ function Register() {
       <div className="container">
         <div className="left">
           <label className="Projecttitle">Sign up</label>
-          <img src={shop} className="shop" alt="shoplogo" />
+          {/* <img src={shop} className="shop" alt="shoplogo" /> */}
         </div>
         <div className="right">
           <form onSubmit={onSubmits}>

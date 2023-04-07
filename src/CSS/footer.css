@@ -1,0 +1,9 @@
+footer {
+    display: block;
+    /* margin-top: auto; */
+    text-align: center;
+    margin-bottom: 0px;
+    padding: 3px;
+    background-color: DarkSalmon;
+    color: white;
+}

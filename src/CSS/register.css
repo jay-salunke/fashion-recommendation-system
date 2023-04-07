@@ -1,0 +1,121 @@
+/* Register style starts */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.Projecttitle {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 200%;
+  line-height: 29px;
+  color: #000000;
+}
+
+.Name {
+  width: 400px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+}
+
+.inputbox {
+  width: 100%;
+  height: 50px;
+  margin-left: 0px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+}
+
+.inputbox1 {
+  width: 97%;
+  height: 65px;
+  margin-left: 0px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+}
+
+.shop {
+  height: 500px;
+  width: 500px;
+}
+
+/* html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+} */
+
+.container {
+  display: flex;
+	flex-direction: row;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 3rem;
+}
+
+.left {
+  width: 40%;
+  flex: 1;
+}
+
+.right {
+  width: 60%;
+  padding-left: 10%;
+  padding-top: 2rem;
+}
+
+.right1 {
+  width: 50%;
+  align-items: flex-end;
+  padding-top: 2rem;
+}
+
+.left1 {
+  width: 50%;
+  padding-left: 1%;
+  align-items: flex-start;
+  padding-top: 2rem;
+}
+
+.container1 {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.Confirmbtn {
+  margin-left: 50%;
+  margin-right: 50%;
+}
+
+.container2radio {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 90%;
+  overflow: hidden;
+  padding-top: 1rem;
+  vertical-align: bottom;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* Register style ends */

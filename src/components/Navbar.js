@@ -1,10 +1,12 @@
-const Navbar = () => {
+import React from 'react';
+
+const NavBar = () => {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Navbar
+            Logo
           </a>
           <button
             className="navbar-toggler"
@@ -21,17 +23,17 @@ const Navbar = () => {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                  Home
+                  Women
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Features
+                  Men
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Pricing
+                  Kids
                 </a>
               </li>
               <li className="nav-item">
@@ -41,7 +43,7 @@ const Navbar = () => {
                   tabindex="-1"
                   aria-disabled="true"
                 >
-                  Disabled
+                  wishlist
                 </a>
               </li>
             </ul>
@@ -52,4 +54,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;

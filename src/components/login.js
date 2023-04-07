@@ -2,7 +2,7 @@ import React from "react";
 import person from "../assets/person.png";
 import Image from "./Image";
 import { Link } from "react-router-dom";
-import API_URL from "../Constants/Api";
+// import API_URL from "../Constants/Api";
 import axios from "axios";
 
 const Login = () => {
@@ -25,7 +25,7 @@ const Login = () => {
       let response = await axios({
         withCredentials: true,
         method,
-        url: API_URL,
+        // url: API_URL,
         headers,
       });
       console.log(response.headers["host"]); // The response data from the API
