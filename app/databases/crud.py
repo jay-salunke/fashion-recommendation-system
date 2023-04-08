@@ -39,12 +39,18 @@ def create_user_info(db: Session, user: schemas.User):
         return False
     db_user = models.User(user_id=generate_user_id(), club_member_status=user.club_member_status,
                           fashion_news_frequency=user.fashion_news_frequency, age=user.age,
-                          postal_code=user.postal_code,name=user.name)
+                          postal_code=user.postal_code, name=user.name)
     hello = db_user.__dict__.copy()
     hello.pop('_sa_instance_state')
     db.query(models.User).filter(models.User.email == user.email).update(hello)
     db.commit()
     return True
+
+
+def update_user_info(db: Session, update_items: dict, user_id: str):
+    print("I am in Crud")
+    db.query(models.User).filter(models.User.user_id == user_id).update(update_items)
+    db.commit()
 
 
 def get_transactions_by_id(db: Session, id: str):
@@ -82,5 +88,3 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
     db.commit()
     db.refresh(db_transaction)
     return True
-
-

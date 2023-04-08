@@ -4,3 +4,4 @@ passlib
 pymysql
 sqlalchemy
 python-multipart
+pyjwt

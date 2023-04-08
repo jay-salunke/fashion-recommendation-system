@@ -19,7 +19,7 @@ class Item(Base):
     __tablename__ = "items"
 
     item_id = Column(BIGINT, primary_key=True, index=True, autoincrement=False)
-    product_name = Column(String(100), index=True)
+    product_name = Column(String(100))  
     product_type_no = Column(BIGINT)
     product_group_name = Column(String(100))
     graphical_appearance_no = Column(BIGINT)

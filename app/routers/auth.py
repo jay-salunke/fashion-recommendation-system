@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends
+import email
+from fastapi import APIRouter, Depends,Body
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from starlette.responses import Response
 from  starlette.responses import JSONResponse
-from typing import Optional
+from typing import Annotated, Optional
 import base64
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -221,7 +222,7 @@ async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depe
 
 
 @router.post('/register')
-def register(user: schemas.UserCreate, db: Session = Depends(get_db), key = Depends(get_current_user)):
+def register(user: schemas.UserCreate ,db: Session = Depends(get_db)):
     result = crud.create_user(db=db, user=user)
     if result:
         return {

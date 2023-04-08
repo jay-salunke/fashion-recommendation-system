@@ -56,12 +56,13 @@ class UserInfo(UserBase):
 
 class User(BaseModel):
     email: Optional[str] = None
-    name: str
-    club_member_status: str
-    fashion_news_frequency: str
-    age: int
-    postal_code: str
-
+    name: Optional[str] = None
+    club_member_status: Optional[str] = None
+    fashion_news_frequency: Optional[str] = None
+    age: Optional[int] = None
+    postal_code: Optional[str] = None
+    password: Optional[str] = None
+    new_password: Optional[str] = None
     class Config:
         orm_mode = True
 
