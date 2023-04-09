@@ -1,6 +1,4 @@
 import React from "react";
-import person from "../assets/person.png";
-import Image from "./Image";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -46,36 +44,30 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div className="container mt-5">
+    <div className="body-class">
+      <div className="container">
         <div className="row">
           <div className="col-md-6 col-sm-3 col-lg-6 mx-auto">
             <form action=" " onSubmit={onFormSubmit}>
               <div className="card">
                 <div className="card-body">
-                  {/*Person Logo */}
-                  <div className="row">
-                    <div className="col">
-                      <center>
-                        <Image src={person} width="55px" alt="person-logo" />
-                      </center>
-                    </div>
-                  </div>
-
                   {/*Member login */}
                   <div className="row">
                     <div className="col">
-                      <center>
-                        <h3> Login</h3>
-                      </center>
+                      {/* <center>
+                          <h1> Login </h1>
+                        </center> */}
                     </div>
                   </div>
-                  <hr />
+                  <br />
+                  <br />
                   <div className="row">
                     <div className="col">
                       {/*Email Id InputText */}
                       <div className="mt-3">
-                        <label htmlFor="email">Email ID</label>
+                        {/* <label className="Name" htmlFor="email"> */}
+                        {/* Email ID */}
+                        {/* </label> */}
                         <div className="form-group">
                           <input
                             className="form-control"
@@ -87,10 +79,11 @@ const Login = () => {
                           />
                         </div>
                       </div>
-
                       {/*Password InpuText*/}
                       <div className="mt-3">
-                        <label htmlFor="password">Password</label>
+                        <label className="Name" htmlFor="password">
+                          {/* Password */}
+                        </label>
                         <div className="form-group">
                           <input
                             className="form-control"
@@ -102,8 +95,8 @@ const Login = () => {
                           />
                         </div>
                       </div>
-
-                      <hr className="mt-5" />
+                      <br />
+                      <br />
                       <div className="mt-2 text-center">
                         Don't have an account yet ?
                         <Link
@@ -116,9 +109,11 @@ const Login = () => {
 
                       <div className="mt-3">
                         <div className="form-group">
-                          <button className="form-control btn btn-success text-center">
-                            Login
-                          </button>
+                          <center>
+                            <button className="form-btn btn btn-success text-center">
+                              Login
+                            </button>
+                          </center>
                         </div>
                       </div>
                     </div>
@@ -129,7 +124,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
