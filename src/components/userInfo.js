@@ -1,13 +1,13 @@
-import { FormEvent, useState } from "react";
-// import React, { useState} from "react";
+import { useState } from "react";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
-import shop from "./shopping.svg";
+import shop from "../assets/shopping.svg";
 
-function Register() {
+function UserInfo() {
   const [info, setInfo] = useState({
     name: "",
-    username: "",
+    club_member_status: "",
+    fashion_news_frequency: "",
     age: "",
     postalcode: "",
     password: "",
@@ -18,13 +18,32 @@ function Register() {
     const value = event.target.value;
 
     setInfo((prev) => {
-      event.preventDefault();
       return { ...prev, [name]: value };
     });
   };
 
   const onSubmits = (event) => {
     event.preventDefault();
+    const axios = require("axios");
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://127.0.0.1:8000/users/info",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: info,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -72,6 +91,7 @@ function Register() {
                 <br />
 
                 <TextField
+                  type="number"
                   className="inputbox1"
                   value={info.regno}
                   onChange={inputEvent}
@@ -88,6 +108,7 @@ function Register() {
                 <br />
 
                 <TextField
+                  type="number"
                   className="inputbox1"
                   value={info.regno}
                   onChange={inputEvent}
@@ -148,4 +169,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default UserInfo;

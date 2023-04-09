@@ -1,48 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import person from "../assets/person.png";
 import Image from "./Image";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
-  const onFormSubmit = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const Register = async (e) => {
     e.preventDefault();
-
-    const Login = async () => {
-      const { Buffer } = require("buffer");
-      const credentials = Buffer.from(`${email}:${password}`).toString(
-        "base64"
-      );
-      var config = {
-        method: "POST",
+    if (password === confirmPassword) {
+      let data = JSON.stringify({
+        email,
+        password,
+      });
+      const config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://127.0.0.1:8000/auth/register",
         headers: {
-          Authorization: `Basic ${credentials}`,
           "Content-Type": "application/json",
         },
-        url: "http://127.0.0.1:8000/auth/login",
-        withCredentials: true,
+        data: data,
       };
 
-      const response = await axios(config);
-      console.log(response);
-      if (
-        response.data.status === "success" &&
-        response.data.redirect === "True"
-      ) {
-        navigate("/userinfo", { replace: true });
-      } else if (response.data.status === "success") {
-        navigate("/home", { replace: true });
-      } else {
-        alert("Entered Credentials are invalid");
+      try {
+        const response = await axios.request(config);
+        if (response.data.status === "success") {
+          navigate("/login", { replace: true });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    };
-
-    Login();
+    } else {
+      alert("Password is not matching");
+    }
   };
 
   return (
@@ -50,7 +46,7 @@ const Login = () => {
       <div className="container mt-5">
         <div className="row">
           <div className="col-md-6 col-sm-3 col-lg-6 mx-auto">
-            <form action=" " onSubmit={onFormSubmit}>
+            <form action=" " onSubmit={Register}>
               <div className="card">
                 <div className="card-body">
                   {/*Person Logo */}
@@ -66,7 +62,7 @@ const Login = () => {
                   <div className="row">
                     <div className="col">
                       <center>
-                        <h3> Login</h3>
+                        <h3> Register</h3>
                       </center>
                     </div>
                   </div>
@@ -103,6 +99,20 @@ const Login = () => {
                         </div>
                       </div>
 
+                      <div className="mt-3">
+                        <label htmlFor="password">Confirm Password</label>
+                        <div className="form-group">
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="password"
+                            placeholder="Enter the Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
                       <hr className="mt-5" />
                       <div className="mt-2 text-center">
                         Don't have an account yet ?
@@ -133,4 +143,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
