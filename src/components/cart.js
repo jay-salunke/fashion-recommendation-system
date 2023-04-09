@@ -1,9 +1,4 @@
-// import Image from "./Image";
-// import img1 from "../assets/f1.jpeg";
-// import img2 from "../assets/f2.jpeg";
-// import img3 from "../assets/f3.jpeg";
 import React from "react";
-// import PriceCounter from "./PriceCounter";
 
 const Cart = () => {
   return (

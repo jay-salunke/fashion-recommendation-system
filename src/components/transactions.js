@@ -4,6 +4,8 @@ import Image from "./Image";
 
 const Transactions = () => {
   const [responseData, setResponseData] = useState([]);
+  const min = 150;
+  const max = 5000;
 
   useEffect(() => {
     const response = async () => {
@@ -19,6 +21,7 @@ const Transactions = () => {
           "Content-Type": "application/json",
         },
         data: data,
+        withCredentials: true,
       };
 
       try {
@@ -49,14 +52,21 @@ const Transactions = () => {
                       .substr(0, 2)}/0${
                       transaction.item_id
                     }.jpg?sv=2021-12-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-06-30T19:27:18Z&st=2023-04-09T11:27:18Z&spr=https&sig=wPAoF6tCS%2BoowdD8ztwOMKiE%2BpRU6vAxCKM3ZuerB1Y%3D`}
-                    width={"100px"}
+                    width={"370px"}
+                    height={"300px"}
                   />
 
                   <p>Transaction ID: {transaction.transaction_id}</p>
-                  <p>Transaction Date: {transaction.transaction_date}</p>
+                  <p>
+                    Transaction Date:{" "}
+                    {new Date(transaction.transaction_date).toString()}
+                  </p>
                   <p>Item Name: {transaction.item_name}</p>
                   <p>Item ID: {transaction.item_id}</p>
-                  <p>Item Price: {transaction.item_price}</p>
+                  <p>
+                    Item Price:
+                    {Math.floor(Math.random() * (max - min + 1)) + min}
+                  </p>
                   <p>Item Description: {transaction.item_description}</p>
                 </div>
               </div>

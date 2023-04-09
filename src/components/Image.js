@@ -1,7 +1,12 @@
-const Image = ({ src, width, alt }) => {
+const Image = ({ src, width, alt, height }) => {
   return (
     <>
-      <img src={src} width={width} alt={alt} />
+      <img
+        src={src}
+        width={width}
+        height={height}
+        alt={alt}
+      />
     </>
   );
 };
