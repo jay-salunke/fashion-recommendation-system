@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from starlette.staticfiles import StaticFiles
+from app.routers import recommend
 from routers import auth, users, items
 from databases.database import engine
 from databases import models, crud
@@ -26,7 +27,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 # Include Items Information Router
 app.include_router(items.router)
-
+app.include_router(recommend.router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 if __name__ == "__main__":

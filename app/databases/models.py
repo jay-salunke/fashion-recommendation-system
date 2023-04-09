@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.mysql import BIGINT
+from sqlalchemy.dialects.mysql import BIGINT, JSON
 from databases.database import Base
 
 
@@ -41,3 +41,8 @@ class Transactions(Base):
     sales_channel_id = Column(BIGINT)
     timestamp = Column(BIGINT)
     event_type = Column(String(20))
+
+# class Cart(Base):
+#     __tablename__="cart"
+#     user_id = Column(String(100), index=True)
+#     item_ids = Column(JSON)

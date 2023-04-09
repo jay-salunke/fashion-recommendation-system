@@ -1,3 +1,4 @@
+from pyexpat import model
 from sqlalchemy.orm import Session
 from databases import models, schemas
 import time
@@ -92,3 +93,11 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
     db.commit()
     db.refresh(db_transaction)
     return True
+
+
+def get_items_by_item_id(db: Session, item_id: str):
+    return db.query(models.Item).filter(models.Item.item_id == item_id).first()
+
+
+def get_transactions_for_item(db: Session , user_id: str):
+    return db.query(models.Transactions).filter(models.Transactions.user_id == user_id).first()

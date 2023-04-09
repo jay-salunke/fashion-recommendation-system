@@ -53,7 +53,7 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
 @router.post('/transactions')
 def get_transactions(user = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
-        result = user;
+        result = user
         print(result.user_id)
         if result:
             # get all transactions for a user and return it in json format
