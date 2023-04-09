@@ -33,11 +33,15 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 
+def get_user_by_id(db: Session, user_id: str):
+    return db.query(models.User).filter(models.User.user_id == user_id).first()
+
+
 def create_user_info(db: Session, user: schemas.User):
     result = get_user_by_email(db, user.email)
     if result.age is not None:
         return False
-    db_user = models.User(user_id=generate_user_id(), club_member_status=user.club_member_status,
+    db_user = models.User(club_member_status=user.club_member_status,
                           fashion_news_frequency=user.fashion_news_frequency, age=user.age,
                           postal_code=user.postal_code, name=user.name)
     hello = db_user.__dict__.copy()

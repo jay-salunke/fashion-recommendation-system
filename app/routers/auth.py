@@ -1,9 +1,8 @@
-import email
-from fastapi import APIRouter, Depends,Body
+from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from starlette.responses import Response
-from  starlette.responses import JSONResponse
+from starlette.responses import JSONResponse
 from typing import Annotated, Optional
 import base64
 from passlib.context import CryptContext
@@ -24,7 +23,6 @@ from databases import schemas
 from databases import crud
 from databases.getdb import get_db
 
-
 router = APIRouter(prefix="/auth")
 
 # to get a string like this run:
@@ -34,8 +32,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-
-
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -43,7 +39,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str = None
-
 
 
 class OAuth2PasswordBearerCookie(OAuth2):
@@ -123,7 +118,7 @@ def authenticate_user(email: str, password: str, db: Session):
         return False
     if user.hashed_password != password:
         return False
-    return user,user.age
+    return user, user.age
 
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
@@ -138,7 +133,6 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    
     credentials_exception = HTTPException(
         status_code=HTTP_403_FORBIDDEN, detail="Could not validate credentials"
     )
@@ -150,13 +144,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         token_data = TokenData(username=username)
     except PyJWTError:
         raise credentials_exception
-    user = crud.get_user_by_email(email=token_data.username, db=db)
+    user = crud.get_user_by_id(user_id=token_data.username, db=db)
     if user is None:
         raise credentials_exception
     return user
 
 
-async def get_current_active_user(current_user = Depends(get_current_user)):
+async def get_current_active_user(current_user=Depends(get_current_user)):
     return current_user
 
 
@@ -167,7 +161,7 @@ async def homepage():
 
 @router.post("/token", response_model=Token)
 async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user,age = authenticate_user(email=form_data.username, password=form_data.password, db=db)
+    user, age = authenticate_user(email=form_data.username, password=form_data.password, db=db)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -180,25 +174,24 @@ async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depend
 @router.get("/logout")
 async def route_logout_and_remove_cookie():
     response = RedirectResponse(url="/auth/login")
-    response.delete_cookie("Authorization", domain="ec2-43-204-23-33.ap-south-1.compute.amazonaws.com")
+    response.delete_cookie("Authorization", domain="myproject.local")
     return response
 
 
 @router.post('/login')
-async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
+async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
     print(auth)
     if not auth:
         return JSONResponse({'status': 'failed'})
     try:
         decoded = base64.b64decode(auth).decode("ascii")
         username, _, password = decoded.partition(":")
-        user,age = authenticate_user(email=username, password=password, db=db)
-
+        user, age = authenticate_user(email=username, password=password, db=db)
         if not user:
             raise HTTPException(status_code=400, detail="Incorrect email or password")
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": username}, expires_delta=access_token_expires
+            data={"sub": user.user_id}, expires_delta=access_token_expires
         )
 
         token = jsonable_encoder(access_token)
@@ -206,23 +199,24 @@ async def login_basic( auth: BasicAuth = Depends(basic_auth), db: Session = Depe
         print(age)
         if age is None:
             redirect = "True"
-        response = JSONResponse({'status': "success",'redirect': redirect,'token':token},headers={'token':"{token}"}) 
+        response = JSONResponse({'status': "success", 'redirect': redirect, 'token': token},
+                                headers={'token': "{token}"})
         response.set_cookie(
-            key= "Authorization",
+            key="Authorization",
             value=f"Bearer {token}",
-            domain="ec2-43-204-23-33.ap-south-1.compute.amazonaws.com",
+            domain="myproject.local",
             httponly=False,
             max_age=1800,
             expires=1800,
         )
-        return  response   
+        return response
 
     except Exception as e:
         return JSONResponse({'status': 'failed'})
 
 
 @router.post('/register')
-def register(user: schemas.UserCreate ,db: Session = Depends(get_db)):
+def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     result = crud.create_user(db=db, user=user)
     if result:
         return {

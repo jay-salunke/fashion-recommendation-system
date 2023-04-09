@@ -6,8 +6,12 @@ import boto3
 from databases.getdb import get_db
 
 router = APIRouter(prefix="/recommend")
+#get access key and secret key from environment variables
 
-personalizeRt = boto3.client('personalize-runtime')
+personalizeRt = boto3.client('personalize-runtime',
+                             aws_access_key_id=ACCESS_KEY,
+                             aws_secret_access_key=SECRET_KEY,
+                             region_name='ap-south-1')
 
 #lL3ZtFGCLXV81efEsxax
 @router.post("/foryou")

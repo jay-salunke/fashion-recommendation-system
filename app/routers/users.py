@@ -11,36 +11,18 @@ router = APIRouter(prefix="/users")
 
 
 @router.post('/info')
-def get_info(userinfo: schemas.User, email: Annotated[str, Body()], db: Session = Depends(get_db)):
-    userinfo.email = email
-    check = crud.get_user_by_email(db=db, email=email)
-    if not check:
-        return {
-            "api": "v1",
-            "status": "failed",
-            "description": "User Not Found"
-        }
-    result = crud.create_user_info(db=db, user=userinfo)
-    if not result:
-        return {
-            "api": "v1",
-            "status": "failed",
-            "description": "User Information Is Already There"
-        }
-    else:
-        return {
-            "api": "v1",
-            "status": "success",
-            "description": "User Information Added Successfully"
-        }
+def get_info(user=Depends(get_current_user), db: Session = Depends(get_db)):
+    info = crud.get_user_by_id(db=db, user_id=user.user_id)
+    return info
 
 
 @router.post('/info/edit')
-def edit_info(emailu: Annotated[str, Body()],user: schemas.User, db: Session = Depends(get_db)):
+def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session = Depends(get_db)):
+    print(user_id)
     update_items = {k: v for k, v in user.dict().items() if v is not None}
     print(update_items)
     try:
-        user = crud.get_user_by_email(db=db, email=emailu)
+        user = crud.get_user_by_id(db=db, user_id=user_id.user_id)
         # check password and confirm password is in update_items
         if 'password' in update_items and 'new_password' in update_items:
 
@@ -58,7 +40,7 @@ def edit_info(emailu: Annotated[str, Body()],user: schemas.User, db: Session = D
                 print(update_items)
                 crud.update_user_info(db=db, update_items=update_items, user_id=user.user_id)
         else:
-            crud.update_user_info(db=db,  update_items=update_items, user_id=user.user_id)
+            crud.update_user_info(db=db, update_items=update_items, user_id=user.user_id)
         return {
             "api": "v1",
             "status": "success",
@@ -68,29 +50,27 @@ def edit_info(emailu: Annotated[str, Body()],user: schemas.User, db: Session = D
         print(e)
 
 
-
 @router.post('/transactions')
-def get_transactions(email: Annotated[str, Body(embed=True)], db: Session = Depends(get_db)):
+def get_transactions(user = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
-        result = crud.get_user_by_email(db, email)
+        result = user;
         print(result.user_id)
         if result:
             # get all transactions for a user and return it in json format
             transactions = crud.get_transactions_by_id(db=db, id=result.user_id)
             transaction_list = []
-
-            for transaction, item in transactions:
-                transaction_data = {
-                    'transaction_id': transaction.id,
-                    'transaction_date': str(transaction.timestamp),
-                    'item_name': item.product_name,
-                    'item_id': item.item_id,
-                    'item_price': item.price,
-                    'item_description': item.description
-                }
-                transaction_list.append(transaction_data)
-            return transaction_list
-
+            if transactions:
+                for transaction, item in transactions:
+                    transaction_data = {
+                        'transaction_id': transaction.id,
+                        'transaction_date': str(transaction.timestamp),
+                        'item_name': item.product_name,
+                        'item_id': item.item_id,
+                        'item_price': item.price,
+                        'item_description': item.description
+                    }
+                    transaction_list.append(transaction_data)
+                return transaction_list
         return {
             "api": "v1",
             "status": "failed",
@@ -101,9 +81,8 @@ def get_transactions(email: Annotated[str, Body(embed=True)], db: Session = Depe
 
 
 @router.post('/transactions/create')
-def create_transactions(transactions: schemas.Transactions, email: Annotated[str, Body()],
-                        db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(db=db, email=email)
+def create_transactions(transactions: schemas.Transactions,
+                        db: Session = Depends(get_db), user=Depends(get_current_user)):
     transactions.user_id = user.user_id
     transactions = crud.create_transactions(db=db, transaction=transactions)
     if transactions:
