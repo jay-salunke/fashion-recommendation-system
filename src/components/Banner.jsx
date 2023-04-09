@@ -1,54 +1,41 @@
-import React from "react";
-import Banner1 from "./../assets/Banner1.jpg";
-import Banner2 from "./../assets/Banner2.jpg";
-import Banner3 from "./../assets/Banner3.jpg";
+import { Carousel } from "react-bootstrap";
+import banner01 from "../assets/banner01.jpg"
+import banner02 from "../assets/banner02.jpg"
+import '../CSS/banner.css'
 
-function Banner() {
+function CustomCarousel ()  {
   return (
-    <div>
-      <div
-        id="carouselExampleControls"
-        className="carousel slide"
-        data-ride="carousel"
-      >
-        <div className="carousel-inner" >
-          <div className="carousel-item active" data-interval="3000">
-            <img className="d-block w-100" src={Banner1} alt="First slide" />
-          </div>
-          <div className="carousel-item" data-interval="3000">
-            <img className="d-block w-100" src={Banner2} alt="Second slide" />
-          </div>
-          <div className="carousel-item" data-interval="3000">
-            <img className="d-block w-100" src={Banner3} alt="Third slide" />
-          </div>
-        </div>
-        <a
-          className="carousel-control-prev"
-          href="#carouselExampleControls"
-          role="button"
-          data-slide="prev"
-        >
-          <span
-            className="carousel-control-prev-icon"
-            aria-hidden="true"
-          ></span>
-          <span className="sr-only"></span>
-        </a>
-        <a
-          className="carousel-control-next"
-          href="#carouselExampleControls"
-          role="button"
-          data-slide="next"
-        >
-          <span
-            className="carousel-control-next-icon"
-            aria-hidden="true"
-          ></span>
-          <span className="sr-only"></span>
-        </a>
-      </div>
-    </div>
-  );
-}
+    <Carousel fade className="banner-card">
+      <Carousel.Item >
+        <img
+          className="d-block w-100 h-25"
+          src={banner01}
+          alt="Random First slide"
+        />
 
-export default Banner;
+        <Carousel.Caption>
+          <h1>SUMMER COLLECTION</h1>
+          <h3>30% OFF</h3>
+          <button className="form-banner-btn">BUY NOW</button>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="d-block w-100 h-25"
+          // src="https://source.unsplash.com/mens/fashion/1000x410"
+          src={banner02}
+          alt="Random First slide"
+        />
+
+        <Carousel.Caption>
+          <h1>MENS COLLECTION</h1>
+          <h3>LIMITED EDITION</h3>
+
+          <button className="form-banner-btn">Buy Now</button>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+  );
+};
+
+export default CustomCarousel;

@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 // import shop from "./shopping.svg";
 
 function Register() {
-  const [info, setInfo] = useState({
+  const [info, setInfo] = useState({  //seteInfo sets value to the attribute info
     name: "",
     username: "",
     age: "",

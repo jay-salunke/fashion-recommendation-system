@@ -1,4 +1,41 @@
-.d-block{
-    height:300px;
-    /* width: 10px; */
+.banner-card {
+  margin-bottom: 15px;
+}
+
+.form-banner-btn {
+  background-color: rgba(249, 249, 249, 0.457);
+  border-radius: 0;
+  width: 100px;
+}
+.form-banner-btn :hover {
+  background-color: rgb(255, 255, 255);
+  box-shadow: 10px 10px 12px rgb(10, 10, 10);
+  box-shadow: none;
+  color: #000000;
+}
+.form-banner-btn :active {
+  background-color: rgb(137, 137, 124);
+  color: #faf9f9;
+}
+.form-banner-btn :focus {
+  background-color: rgb(137, 137, 124);
+  border: none;
+  box-shadow: 8px;
+
+  color: #f3f0f0;
+}
+
+/* change transition duration to control the speed of fade effect */
+.carousel-item {
+  transition: transform 1.6s ease-in-out;
+}
+
+.carousel-fade .active.carousel-item-start,
+.carousel-fade .active.carousel-item-end {
+  transition: opacity 0s 2.6s;
+}
+.carousel-caption {
+  top: 50%;
+  transform: translateY(-50%);
+  text-shadow: 2px 2px #0b0b0b;
 }

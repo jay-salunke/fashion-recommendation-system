@@ -1,18 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import router from "./routes/routes";
-import Home from "./components/Home";
-import './CSS/footer.css';
-import './CSS/banner.css';
-import './CSS/register.css'
-import Register from "./components/Register";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <RouterProvider router={router} /> */}
-    <Home/>
-    {/* <Register/> */}
+    {/* <App/> */}
+
+    
+    
   </React.StrictMode>
 );
