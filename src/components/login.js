@@ -21,10 +21,10 @@ const Login = () => {
       var config = {
         method: "POST",
         headers: {
-          Authorization: `Basic ${credentials}`,
+          "Authorization": `Basic ${credentials}`,
           "Content-Type": "application/json",
         },
-        url: "http://127.0.0.1:8000/auth/login",
+        url: "http://myproject.local:8000/auth/login",
         withCredentials: true,
       };
 
