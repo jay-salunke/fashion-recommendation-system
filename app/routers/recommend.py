@@ -17,9 +17,7 @@ personalizeRt = boto3.client('personalize-runtime',
 
 
 @router.post("/bestseller")
-def bestseller(email: Annotated[str,Body(embed=True)], db: Session = Depends(get_db)):
-    print(email)
-    user = crud.get_user_by_email(email=email,db=db)
+def bestseller(user= Depends(get_current_user), db: Session = Depends(get_db)):
     response = personalizeRt.get_recommendations(
         recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/best',
         userId=user.user_id,
@@ -28,8 +26,7 @@ def bestseller(email: Annotated[str,Body(embed=True)], db: Session = Depends(get
     return response['itemList']
 
 @router.post("/freq")
-def frequently_bought_toghether(email: Annotated[str,Body(embed=True)], db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(email=email, db = db)
+def frequently_bought_toghether(user = Depends(get_current_user), db: Session = Depends(get_db)):
     transaction = crud.get_transactions_for_item(db=db,user_id=user.user_id)
     response = personalizeRt.get_recommendations(
         recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/freq',
@@ -39,12 +36,10 @@ def frequently_bought_toghether(email: Annotated[str,Body(embed=True)], db: Sess
     return response['itemList']
 
 @router.post('/foryou')
-def recommended_for_you(email: Annotated[str,Body(embed=True)], db: Session = Depends(get_db)):
-    user = crud.get_user_by_email(email=email, db = db)
-    transaction = crud.get_transactions_for_item(db=db,user_id=user.user_id)
+def recommended_for_you(user= Depends(get_current_user), db: Session = Depends(get_db)):
     response = personalizeRt.get_recommendations(
         recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/you',
         userId = user.user_id,
         numResults=10
     )
-    return response['itemList']
+    return response['itemList'] 
