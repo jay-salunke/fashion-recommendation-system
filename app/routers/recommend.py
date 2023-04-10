@@ -1,3 +1,4 @@
+import random
 from typing import Annotated
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -23,7 +24,13 @@ def bestseller(user= Depends(get_current_user), db: Session = Depends(get_db)):
         userId=user.user_id,
         numResults=10
     )
-    return response['itemList']
+    data = response['itemList'] 
+    for i in range(0,len(data)):
+        data[i].update({
+            "price": random.randint(200, 500),
+            "descrption": "Sample Product Description"
+        })
+    return data
 
 @router.post("/freq")
 def frequently_bought_toghether(user = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -33,7 +40,13 @@ def frequently_bought_toghether(user = Depends(get_current_user), db: Session = 
         itemId = str(transaction.item_id),
         numResults=10
     )
-    return response['itemList']
+    data = response['itemList'] 
+    for i in range(0,len(data)):
+        data[i].update({
+            "price": random.randint(200, 500),
+            "descrption": "Sample Product Description"
+        })
+    return data
 
 @router.post('/foryou')
 def recommended_for_you(user= Depends(get_current_user), db: Session = Depends(get_db)):
@@ -42,4 +55,11 @@ def recommended_for_you(user= Depends(get_current_user), db: Session = Depends(g
         userId = user.user_id,
         numResults=10
     )
-    return response['itemList'] 
+    data = response['itemList'] 
+    for i in range(0,len(data)):
+        data[i].update({
+            "price": random.randint(200, 500),
+            "descrption": "Sample Product Description"
+        })
+    return data
+    
