@@ -1,7 +1,10 @@
+from operator import or_
 from pyexpat import model
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from databases import models, schemas
 import time
+from typing import List
 
 
 # get system current time and convert it to unix epoch timestamp
@@ -95,9 +98,20 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
     return True
 
 
-def get_items_by_item_id(db: Session, item_id: str):
-    return db.query(models.Item).filter(models.Item.item_id == item_id).first()
 
+
+def get_items_by_item_id(db: Session, item_ids: List[str]):
+    return db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
 
 def get_transactions_for_item(db: Session , user_id: str):
     return db.query(models.Transactions).filter(models.Transactions.user_id == user_id).first()
+
+def update_password(db: Session, email: str,update_items):
+    db.query(models.User).filter(models.User.email == email).update(update_items)
+    db.commit()
+
+def suggest(db, query):
+    result =  db.query(models.Item).filter(models.Item.product_name.like('%' + query + '%')).limit(50).distinct().all()
+    items =  [item.product_name for item in result]
+    return set(items)
+

@@ -42,7 +42,8 @@ class Transactions(Base):
     timestamp = Column(BIGINT)
     event_type = Column(String(20))
 
-# class Cart(Base):
-#     __tablename__="cart"
-#     user_id = Column(String(100), index=True)
-#     item_ids = Column(JSON)
+
+class Cart(Base):
+    __tablename__="cart"
+    user_id = Column(String(100), index=True,primary_key=True)
+    item_ids = Column(JSON)

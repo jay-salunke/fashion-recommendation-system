@@ -1,3 +1,5 @@
+import email
+from turtle import up
 from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -227,4 +229,25 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         return {
             "api": "v1",
             "status": "failed"
+        }
+
+@router.post("/forgot_password")
+def forgot_password(user: schemas.UserCreate,db: Session=Depends(get_db)):
+    try:
+        result = crud.get_user_by_email(email = user.email ,db=db )
+        if result:
+            dic = {'email': user.email, 'hashed_password': user.password}
+            crud.update_password(db=db,update_items=dic,email=user.email)
+            return {
+                'status': 'success',
+                'description': 'password changed succesfully'
+            }
+        return {
+            'status': 'failed',
+            'description': 'user doesnt exist'
+        }
+    except Exception as e:
+        print(e)
+        return {
+            "Internal Server Error"
         }

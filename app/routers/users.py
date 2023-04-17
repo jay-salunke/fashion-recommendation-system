@@ -1,4 +1,6 @@
 import email
+from pyexpat import model
+from telnetlib import SE
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -51,7 +53,7 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
 
 
 @router.post('/transactions')
-def get_transactions(user = Depends(get_current_user), db: Session = Depends(get_db)):
+def get_transactions(user=Depends(get_current_user), db: Session = Depends(get_db)):
     try:
         result = user
         print(result.user_id)
@@ -62,6 +64,7 @@ def get_transactions(user = Depends(get_current_user), db: Session = Depends(get
             if transactions:
                 for transaction, item in transactions:
                     transaction_data = {
+                        'item_name': item.product_name,
                         'transaction_id': transaction.id,
                         'transaction_date': str(transaction.timestamp),
                         'item_name': item.product_name,
@@ -96,3 +99,11 @@ def create_transactions(transactions: schemas.Transactions,
         "status": "failed",
         "description": "Error Occured"
     }
+
+
+@router.get("/suggestion")
+def suggest(q: str | None = None, db: Session = Depends(get_db)):
+    if q:
+        result = crud.suggest(db=db, query=q)
+        return result
+    return "Hello"

@@ -1,8 +1,7 @@
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from starlette.staticfiles import StaticFiles
-from app.routers import recommend
-from routers import auth, users, items
+from routers import auth, users, items,recommend
 from databases.database import engine
 from databases import models, crud
 from fastapi.middleware.cors import CORSMiddleware
