@@ -76,7 +76,7 @@ class Transactions(BaseModel):
     user_id: Optional[str] = None
     item_id: int
     sales_channel_id: int
-    timestamp: int
+    timestamp: Optional[str] = None
     event_type: str
 
     class Config:

@@ -1,4 +1,5 @@
 import email
+from pickle import NONE
 from turtle import up
 from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
@@ -31,7 +32,7 @@ router = APIRouter(prefix="/auth")
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 
 class Token(BaseModel):
@@ -116,10 +117,12 @@ app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
 def authenticate_user(email: str, password: str, db: Session):
     user = crud.get_user_by_email(email=email, db=db)
+    print(user.age)
+    print(user.hashed_password)
     if user is None:
-        return False
+        return None
     if user.hashed_password != password:
-        return False
+        return None
     return user, user.age
 
 
@@ -128,11 +131,28 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=60*12)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+async def get_current_token(token: str = Depends(oauth2_scheme),db : Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=HTTP_403_FORBIDDEN, detail="Could not validate credentials"
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except PyJWTError as e:
+        print(e)
+        raise credentials_exception
+    user = crud.get_user_by_id(user_id=token_data.username, db=db)
+    if user is None:
+        raise credentials_exception
+    return token
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
@@ -144,7 +164,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except PyJWTError:
+    except PyJWTError as e:
+        print(e)
         raise credentials_exception
     user = crud.get_user_by_id(user_id=token_data.username, db=db)
     if user is None:
@@ -176,13 +197,12 @@ async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depend
 @router.get("/logout")
 async def route_logout_and_remove_cookie():
     response = RedirectResponse(url="/auth/login")
-    response.delete_cookie("Authorization", domain="myproject.local")
+    response.delete_cookie("Authorization", domain=NONE)
     return response
 
 
 @router.post('/login')
 async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depends(get_db)):
-    print(auth)
     if not auth:
         return JSONResponse({'status': 'failed'})
     try:
@@ -208,14 +228,13 @@ async def login_basic(auth: BasicAuth = Depends(basic_auth), db: Session = Depen
             value=f"Bearer {token}",
             domain="myproject.local",
             httponly=False,
-            max_age=1800,
-            expires=1800,
+            max_age=86400,
+            expires=86400,
         )
         return response
 
     except Exception as e:
         return JSONResponse({'status': 'failed'})
-
 
 @router.post('/register')
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):

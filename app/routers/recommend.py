@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.routers.auth import get_current_user
 from databases import schemas, crud
 import boto3
+
 import os
 from databases.getdb import get_db
 from databases import crud
@@ -32,11 +33,12 @@ def bestseller(user=Depends(get_current_user), db: Session = Depends(get_db)):
         lis.append(data[i]['itemId'])
     result = crud.get_items_by_item_id(db=db, item_ids=lis)
     return result
-
+    
 
 @router.post("/freq")
 def frequently_bought_toghether(user=Depends(get_current_user), db: Session = Depends(get_db)):
     transaction = crud.get_transactions_for_item(db=db, user_id=user.user_id)
+    print(transaction.item_id)
     response = personalizeRt.get_recommendations(
         recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/freq',
         itemId=str(transaction.item_id),
@@ -63,3 +65,4 @@ def recommended_for_you(user=Depends(get_current_user), db: Session = Depends(ge
         lis.append(data[i]['itemId'])
     result = crud.get_items_by_item_id(db=db, item_ids=lis)
     return result
+    
