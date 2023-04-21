@@ -2,6 +2,7 @@ import email
 from gettext import dpgettext
 from pyexpat import model
 from telnetlib import SE
+from turtle import update
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -54,7 +55,11 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
                 crud.update_user_info(
                     db=db, update_items=update_items, user_id=user.user_id)
         else:
+            print("Hello")
+            
             if user.age is None:
+                print("ok")
+                print(update_items)
                 properties = {
                     'clubMemberStatus': update_items['club_member_status'],
                     'age': update_items['age'],
@@ -67,13 +72,11 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
                 }
 
                 users = [nuser]
-
                 response = personalize_events.put_users(
                     datasetArn="arn:aws:personalize:ap-south-1:296410630894:dataset/FRS/USERS",
                     users=users
                 )
 
-                print(response)
             crud.update_user_info(
                 db=db, update_items=update_items, user_id=user.user_id)
         return {
@@ -82,7 +85,7 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
             "description": "User Information Updated Successfully"
         }
     except Exception as e:
-        print(e)
+        print("Exception is ",e)
 
 
 @router.post('/transactions')
@@ -120,7 +123,7 @@ def get_transactions(user=Depends(get_current_user), db: Session = Depends(get_d
 @router.post('/transactions/create')
 def create_transactions(transactions: schemas.Transactions,
                         db: Session = Depends(get_db), user=Depends(get_current_user), token=Depends(get_current_token)):
-
+    print(transactions)
     transactions.user_id = user.user_id
     transactions.timestamp = get_current_time()
     print(token)

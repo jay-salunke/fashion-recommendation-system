@@ -1,6 +1,6 @@
 from nis import cat
 from fastapi import APIRouter, Depends
-from app.databases import crud
+from databases import crud
 from databases.getdb import get_db
 from sqlalchemy.orm import Session
 router = APIRouter(prefix="/category")

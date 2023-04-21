@@ -104,7 +104,9 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
 
 
 def get_items_by_item_id(db: Session, item_ids: List[str]):
-    return db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
+    # return db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
+    items = db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
+    return items
 
 def get_transactions_for_item(db: Session , user_id: str):
     return db.query(models.Transactions)\
