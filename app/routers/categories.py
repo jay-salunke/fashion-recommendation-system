@@ -1,4 +1,3 @@
-from nis import cat
 from fastapi import APIRouter, Depends
 from databases import crud
 from databases.getdb import get_db

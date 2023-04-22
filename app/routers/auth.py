@@ -1,6 +1,3 @@
-import email
-from pickle import NONE
-from turtle import up
 from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -197,7 +194,7 @@ async def route_login_access_token(form_data: OAuth2PasswordRequestForm = Depend
 @router.get("/logout")
 async def route_logout_and_remove_cookie():
     response = RedirectResponse(url="/auth/login")
-    response.delete_cookie("Authorization", domain=NONE)
+    response.delete_cookie("Authorization", domain="myproject.local")
     return response
 
 

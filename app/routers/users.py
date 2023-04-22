@@ -1,8 +1,3 @@
-import email
-from gettext import dpgettext
-from pyexpat import model
-from telnetlib import SE
-from turtle import update
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -12,7 +7,6 @@ from databases import crud
 from routers.auth import get_current_token, get_current_user
 from databases.crud import get_current_time
 import boto3
-import json
 import os
 personalize_events = boto3.client('personalize-events',
                                   aws_access_key_id=os.environ.get(
