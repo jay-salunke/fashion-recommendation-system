@@ -106,11 +106,14 @@ def create_transactions(db: Session, transaction: schemas.Transactions):
 def get_items_by_item_id(db: Session, item_ids: List[str]):
     # return db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
     items = db.query(models.Item).filter(or_(*[models.Item.item_id == id for id in item_ids])).all()
+    for item in items:
+        item.price = int(float(item.price) * 10000)
     return items
 
 def get_transactions_for_item(db: Session , user_id: str):
-    return db.query(models.Transactions)\
+    result  =  db.query(models.Transactions)\
     .filter(models.Transactions.user_id == user_id).order_by(models.Transactions.id.desc()).first()
+    return result   
 
 def update_password(db: Session, email: str,update_items):
     db.query(models.User).filter(models.User.email == email).update(update_items)
@@ -122,7 +125,10 @@ def suggest(db, query):
     return set(items)
 
 def category(category:str, db):
-    return db.query(models.Item).filter(models.Item.index_code == category).limit(300).all()
+    result =  db.query(models.Item).filter(models.Item.index_code == category).limit(300).all()
+    for item in result:
+        item.price = int(float(item.price) * 10000)
+    return result
 
 def addtocart(user_id,data,db):
     result = getcart(user_id=user_id,db=db)
