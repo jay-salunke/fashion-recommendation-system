@@ -1,3 +1,4 @@
+import json
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -83,9 +84,10 @@ def edit_info(user: schemas.User, user_id=Depends(get_current_user), db: Session
 
 
 @router.post('/transactions')
-def get_transactions(user=Depends(get_current_user), db: Session = Depends(get_db)):
+def get_transactions(user_id=Depends(get_current_user), db: Session = Depends(get_db)):
+    print("hello")
     try:
-        result = user
+        result = user_id
         print(result.user_id)
         if result:
             # get all transactions for a user and return it in json format

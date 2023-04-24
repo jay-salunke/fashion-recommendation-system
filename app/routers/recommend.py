@@ -1,4 +1,4 @@
-import random
+
 from typing import Annotated
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
@@ -42,7 +42,7 @@ def frequently_bought_toghether(user=Depends(get_current_user), db: Session = De
     if transaction:
         if transaction.item_id:
             response = personalizeRt.get_recommendations(
-                recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/freq',
+                recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/frequently',
                 itemId=str(transaction.item_id),
                 numResults=20
             )
@@ -58,15 +58,16 @@ def frequently_bought_toghether(user=Depends(get_current_user), db: Session = De
 
 @router.post('/foryou')
 def recommended_for_you(user=Depends(get_current_user), db: Session = Depends(get_db)):
-    response = personalizeRt.get_recommendations(
-        recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/you',
-        userId=user.user_id,
-        numResults=20
-    )
-    data = response['itemList']
-    lis = []
-    for i in range(0, len(data)):
-        lis.append(data[i]['itemId'])
-    result = crud.get_items_by_item_id(db=db, item_ids=lis)
+    # response = personalizeRt.get_recommendations(
+    #     recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/you',
+    #     userId=user.user_id,
+    #     numResults=20
+    # )
+    # data = response['itemList']
+    # lis = []
+    # for i in range(0, len(data)):
+    #     lis.append(data[i]['itemId'])
+    # result = crud.get_items_by_item_id(db=db, item_ids=lis)
+    result = "Hello"
     return result
     
