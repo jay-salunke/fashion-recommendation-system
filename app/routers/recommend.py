@@ -25,13 +25,14 @@ def bestseller(user=Depends(get_current_user), db: Session = Depends(get_db)):
     response = personalizeRt.get_recommendations(
         recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/best',
         userId=user.user_id,
-        numResults=20
+        numResults=10
     )
     data = response['itemList']
     lis = []
     for i in range(0, len(data)):
         lis.append(data[i]['itemId'])
     result = crud.get_items_by_item_id(db=db, item_ids=lis)
+   
     return result
     
 
@@ -44,13 +45,14 @@ def frequently_bought_toghether(user=Depends(get_current_user), db: Session = De
             response = personalizeRt.get_recommendations(
                 recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/frequently',
                 itemId=str(transaction.item_id),
-                numResults=20
+                numResults=10
             )
             data = response['itemList']
             lis = []
             for i in range(0, len(data)):
                 lis.append(data[i]['itemId'])
             result = crud.get_items_by_item_id(db=db, item_ids=lis)
+            
             return result
     return "None"
     
@@ -58,16 +60,15 @@ def frequently_bought_toghether(user=Depends(get_current_user), db: Session = De
 
 @router.post('/foryou')
 def recommended_for_you(user=Depends(get_current_user), db: Session = Depends(get_db)):
-    # response = personalizeRt.get_recommendations(
-    #     recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/you',
-    #     userId=user.user_id,
-    #     numResults=20
-    # )
-    # data = response['itemList']
-    # lis = []
-    # for i in range(0, len(data)):
-    #     lis.append(data[i]['itemId'])
-    # result = crud.get_items_by_item_id(db=db, item_ids=lis)
-    result = "Hello"
+    response = personalizeRt.get_recommendations(
+        recommenderArn='arn:aws:personalize:ap-south-1:296410630894:recommender/foryou',
+        userId=user.user_id,
+        numResults=10
+    )
+    data = response['itemList']
+    lis = []
+    for i in range(0, len(data)):
+        lis.append(data[i]['itemId'])
+    result = crud.get_items_by_item_id(db=db, item_ids=lis)
     return result
     
